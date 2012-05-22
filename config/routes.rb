@@ -1,9 +1,17 @@
 SampleApp::Application.routes.draw do
 
-  resources :users
+  resources :users do
+    # "member" requires an ID ... /users/123/[get X]
+    # "collection" doesn't ... /users/[get X]
+    member do 
+      get :following, :followers #yields follwing_user_path
+    end
+  end
+
   resources :sessions, only: [:new, :create, :destroy]
   resources :microposts, only: [:create, :destroy]
-  
+  resources :relationships, only: [:create, :destroy]
+    
   match '/signup',  to: 'users#new'
   match '/signin',  to: 'sessions#new'
   match '/signout', to: 'sessions#destroy', via: :delete
